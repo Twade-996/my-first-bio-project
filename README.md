@@ -17,29 +17,11 @@ Chr1_100kb_evr_structure.pdb
 
 .hic
 
-java -Xmx16G -jar ~/bin/juicer_tools.jar dump observed KR \
-~/k562_test/rawdata/GSE63525_K562_combined_30.hic \
-chr1 chr1 BP 100000 chr1_100kb_kr.dump
-
-chr1_100kb_kr.dump
-
-python3 convert_dump_to_matrix.py chr1_100kb_kr.dump 100000 chr1_100kb
-
-chr1_100kb_matrix.txt/chr1_100kb_bins.bed
-
----------------------------------------------------------------------------
-
-.hic
-
 java -Xmx16G -jar ~/software/juicer/juicer_tools.jar dump observed NONE ~/k562_test/rawdata/GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
 
-convert_to_homer_summary.py
+format_raw_hic.py
 
-chr1_100kb.summary
-
-convert_to_summary.py
-
-chr1_100kb.summary.formatted.txt
+chr1_100kb.summary.formatted.txt & chr1_100kb_bins.bed
 
 CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDis> [chrName]
 
