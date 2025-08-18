@@ -3,7 +3,7 @@
 From hic data to chromosome 3D dynamic models
 
 ----------------------------------------------------------------------------
-#使用EVR计算bin坐标
+# 使用EVR计算bin坐标
 
 .hic
 
@@ -20,7 +20,7 @@ evr.py -i input_file -o output_file
 Chr1_100kb_evr_structure.pdb
 
 ----------------------------------------------------------------------------
-#使用CscoreTool划分区室
+# 使用CscoreTool划分区室
 
 .hic
 
@@ -35,7 +35,7 @@ CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDi
 Cscore(txt/bedgraph/…)
 
 ---------------------------------------------------------------------------
-#对比分析cscore,并汇总图像
+# 对比分析cscore,并汇总图像
 
 sample_1.bedgraph & sample_2.bedgraph
 
@@ -57,22 +57,22 @@ python auto_plot_images.py /your/output/path
 .png
 
 ----------------------------------------------------------------------------
-##将IO.py放置到与绘图脚本同一目录中
-#标注区室的染色体3D模型
+## 将IO.py放置到与绘图脚本同一目录中
+# 标注区室的染色体3D模型
 
 sample_1.pdb & .bedgraph
 
 python plot.py chr1_100kb_evr_structure.txt -cf chr1_100kb__cscore.txt --show
 
 ----------------------------------------------------------------------------
-#可交互、可平滑变化的一对3D染色体模型
+# 可交互、可平滑变化的一对3D染色体模型
 
 sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
 python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt
 
 ----------------------------------------------------------------------------
-#平滑变化的一对3D染色体模型
+# 平滑变化的一对3D染色体模型
 
 sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
