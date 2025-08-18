@@ -3,21 +3,24 @@
 From hic data to chromosome 3D dynamic models
 
 ----------------------------------------------------------------------------
+#使用EVR计算bin坐标
+
 .hic
 
 java -jar juicer_tools.jar dump observed KR GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb.KRnorm.txt
 
 chr1_100kb.KRnorm.txt
 
-convert_3col_to_evr.py
+convert_3col_to_evr.py chr1_100kb.KRnorm.txt chr1_100kb_evr_matrix.txt
 
 chr1_100kb_evr_matrix.txt
 
-evr.py
+evr.py -i input_file -o output_file
 
 Chr1_100kb_evr_structure.pdb
 
 ----------------------------------------------------------------------------
+#使用CscoreTool划分区室
 
 .hic
 
@@ -32,10 +35,11 @@ CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDi
 Cscore(txt/bedgraph/…)
 
 ---------------------------------------------------------------------------
+#对比分析cscore,并汇总图像
 
 sample_1.bedgraph & sample_2.bedgraph
 
-Compare_cscores.py
+compare_cscores.py [-h] --outdir OUTDIR [--name1 NAME1] [--name2 NAME2] cscore1 cscore2
 
 boundary_drift.png
 compartment_switch_rate.png
@@ -48,27 +52,31 @@ cscore_scatter.png
 pearson.txt
 spearman.txt
 
-auto_plot_images.py
+python auto_plot_images.py /your/output/path
 
 .png
 
 ----------------------------------------------------------------------------
+##将IO.py放置到与绘图脚本同一目录中
+#标注区室的染色体3D模型
 
 sample_1.pdb & .bedgraph
 
-python plot.py chr1_100kb_evr_structure.txt -cf chr1_100kb__cscore.txt --skip-range 1215 1425 --show
+python plot.py chr1_100kb_evr_structure.txt -cf chr1_100kb__cscore.txt --show
 
 ----------------------------------------------------------------------------
+#可交互、可平滑变化的一对3D染色体模型
 
-sample_1.pdb/.bedgraph & sample_2.pdb/.bedgraph
+sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
-plot_interactive_morph.py & IO.py
+python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt
 
 ----------------------------------------------------------------------------
+#平滑变化的一对3D染色体模型
 
-sample_1.pdb/.bedgraph & sample_2.pdb/.bedgraph
+sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
-plot_animation.py & IO.py
+python plot_animation.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt -o .mp4
 
 .mp4
 
