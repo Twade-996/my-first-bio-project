@@ -5,7 +5,7 @@ From hic data to chromosome 3D dynamic models
 ----------------------------------------------------------------------------
 .hic
 
-java -jar juicer_tools.jar dump observed KR ~/k562_test/rawdata/GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb.KRnorm.txt
+java -jar juicer_tools.jar dump observed KR GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb.KRnorm.txt
 
 chr1_100kb.KRnorm.txt
 
@@ -21,7 +21,7 @@ Chr1_100kb_evr_structure.pdb
 
 .hic
 
-java -Xmx16G -jar ~/software/juicer/juicer_tools.jar dump observed NONE ~/k562_test/rawdata/GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
+java -Xmx16G -jar juicer_tools.jar dump observed NONE GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
 
 python format_raw_hic.py chr1_100kb_raw.txt chr1_100kb.summary.formatted.txt --chrom chr1 --binsize 100000 --output_bed chr1_100kb_bins.bed
 
