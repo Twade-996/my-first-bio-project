@@ -23,7 +23,7 @@ Chr1_100kb_evr_structure.pdb
 
 java -Xmx16G -jar ~/software/juicer/juicer_tools.jar dump observed NONE ~/k562_test/rawdata/GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
 
-format_raw_hic.py
+python format_raw_hic.py chr1_100kb_raw.txt chr1_100kb.summary.formatted.txt --chrom chr1 --binsize 100000 --output_bed chr1_100kb_bins.bed
 
 chr1_100kb.summary.formatted.txt & chr1_100kb_bins.bed
 
