@@ -90,6 +90,21 @@ python plot_animation.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt -o .mp4
 .mp4
 
 -------------------------------------------------------------------------------
+# 创建bin与基因的映射关系
+
+awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
+
+python run_analysis.py \
+    --bin-gene-map bin_gene_map.txt \
+    --rna-seq rna_seq_de_results.csv \
+    --scores1 cscore1.txt \
+    --scores2 cscore2.txt \
+    --name1 GM12878 \
+    --name2 K562 \
+    -t 0.1 \
+    -o gm12878_vs_k562_compartment_expression.png
+
+--------------------------------------------------------------------------------
 ## 致谢 (Acknowledgments)
 
 本研究的实现离不开以下优秀的开源软件和公开数据集的支持。我们对所有开发者、贡献者及数据提供方表示最诚挚的感谢。
