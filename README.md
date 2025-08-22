@@ -35,6 +35,15 @@ CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDi
 Cscore(txt/bedgraph/…)
 
 ---------------------------------------------------------------------------
+# 判断A/B区室的cscore阈值
+
+cscore.txt
+
+python analyze_scores.py cscore.txt
+
+suggested thresholds
+
+---------------------------------------------------------------------------
 # 对比分析cscore,并汇总图像
 
 sample_1.bedgraph & sample_2.bedgraph
@@ -62,7 +71,7 @@ python auto_plot_images.py /your/output/path
 
 sample_1.pdb & .bedgraph
 
-python plot.py chr1_100kb_evr_structure.txt -cf chr1_100kb__cscore.txt --show
+python plot.py chr1_100kb_evr_structure.pdb -cf chr1_100kb__cscore.txt --show
 
 ----------------------------------------------------------------------------
 # 可交互、可平滑变化的一对3D染色体模型
@@ -72,7 +81,7 @@ sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt
 
 ----------------------------------------------------------------------------
-# 平滑变化的一对3D染色体模型
+# 平滑变化的一对3D染色体模型动画
 
 sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
