@@ -26,9 +26,9 @@ Chr1_100kb_evr_structure.pdb
 
 java -Xmx16G -jar juicer_tools.jar dump observed NONE GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
 
-python format_raw_hic.py chr1_100kb_raw.txt chr1_100kb.summary.formatted.txt --chrom chr1 --binsize 100000 --output_bed chr1_100kb_bins.bed
+python format_raw_hic.py chr1_100kb_raw.txt chr1_100kb.summary --chrom chr1 --binsize 100000 --output_bed chr1_100kb_bins.bed
 
-chr1_100kb.summary.formatted.txt & chr1_100kb_bins.bed
+chr1_100kb.summary & chr1_100kb_bins.bed
 
 CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDis> [chrName]
 
@@ -50,7 +50,7 @@ hicPCA --matrix GM12878_50kb.h5 --outputFileName gm12878_chr1_50kb_pca.bedgraph 
 
 cscore.txt
 
-python analyze_scores.py cscore.txt
+python cscores_threshold.py cscore.txt
 
 suggested thresholds
 
@@ -82,7 +82,7 @@ python auto_plot_images.py /your/output/path
 
 sample_1.pdb & .bedgraph
 
-python plot.py chr1_100kb_evr_structure.pdb -cf chr1_100kb__cscore.txt --show
+python plot_with_compartment.py chr1_100kb_evr_structure.pdb -cf chr1_100kb__cscore.txt --show
 
 ----------------------------------------------------------------------------
 # 可交互、可平滑变化的一对3D染色体模型
@@ -107,7 +107,7 @@ awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
 
 bedtools intersect -a chr1_100kb_bins_named.bed -b gencode.v19.annotation.gtf -wa -wb > chr1_100kb_bin_gene_map.txt
 
-python run_analysis.py \
+python gene_and_compartment_analysis.py \
     --bin-gene-map bin_gene_map.txt \
     --rna-seq rna_seq_de_results.csv \
     --scores1 cscore1.txt \
