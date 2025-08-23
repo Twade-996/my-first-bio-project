@@ -15,7 +15,7 @@ convert_3col_to_evr.py chr1_100kb.KRnorm.txt chr1_100kb_evr_matrix.txt
 
 chr1_100kb_evr_matrix.txt
 
-evr.py -i input_file -o output_file
+python evr.py -i evr_matrix.txt -o evr_structure.pdb --se 6 -t 6 --seed 1 --ChrType 1
 
 Chr1_100kb_evr_structure.pdb
 
@@ -33,6 +33,17 @@ chr1_100kb.summary.formatted.txt & chr1_100kb_bins.bed
 CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDis> [chrName]
 
 Cscore(txt/bedgraph/…)
+
+----------------------------------------------------------------------------
+# 使用PCA验证区室划分
+
+.hic
+
+hicConvertFormat --matrices GSE63525_GM12878_insitu_DpnII_combined_30.hic --outFileName GM12878_50kb.cool --inputFormat hic --outputFormat cool --resolutions 50000
+
+hicConvertFormat --matrices GM12878_50kb_50000.cool --outFileName GM12878_50kb.h5 --inputFormat cool --outputFormat h5 --chromosome 1 --resolutions 50000
+
+hicPCA --matrix GM12878_50kb.h5 --outputFileName gm12878_chr1_50kb_pca.bedgraph --numberOfEigenvectors 1 --format bedgraph --chromosomes 1
 
 ---------------------------------------------------------------------------
 # 判断A/B区室的cscore阈值
@@ -93,6 +104,8 @@ python plot_animation.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt -o .mp4
 # 创建bin与基因的映射关系
 
 awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
+
+bedtools intersect -a chr1_100kb_bins_named.bed -b gencode.v19.annotation.gtf -wa -wb > chr1_100kb_bin_gene_map.txt
 
 python run_analysis.py \
     --bin-gene-map bin_gene_map.txt \
