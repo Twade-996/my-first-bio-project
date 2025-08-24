@@ -89,7 +89,7 @@ python plot_with_compartment.py chr1_100kb_evr_structure.pdb -cf chr1_100kb__csc
 
 sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
 
-python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt
+python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt [...]
 
 ----------------------------------------------------------------------------
 # 平滑变化的一对3D染色体模型动画
@@ -129,6 +129,24 @@ python gene_abs_expression.py \
     --skip-range 2430 2578 \
     -t 0.1 \
     -o k562_absolute_expression_levels_50kb_final.png
+
+--------------------------------------------------------------------------------
+# 构建区室B->A且含基因的模型
+
+# 标注所有区室变化的bin，点击可输出高亮bin中所含基因及log2FC、TPM
+python new_plot.py evr_structure.pdb cscore.txt evr_structure.pdb cscore.txt --gtf gencode.v19.annotation.gtf --bin-gene-map chr1_100kb_bin_gene_map.txt --rna-seq rna_seq_de_results.csv --rsem-files k562_rep1.tsv k562_rep2.tsv -t 0.2 --highlight-switches
+
+# 标注B->A且含有基因的bin
+python plot_showcase.py \
+    cscore.txt \
+    cscore.txt \
+    --name1 GM12878 --name2 K562 \
+    --gtf gencode.v19.annotation.gtf \
+    --bin-gene-map bin_gene_map_50kb.txt \
+    --rna-seq rna_seq_de_results.csv \
+    --skip-range 2430 2578 \
+    -t 0.1 \
+    --highlight-type "B -> A"
 
 --------------------------------------------------------------------------------
 ## 致谢 (Acknowledgments)
