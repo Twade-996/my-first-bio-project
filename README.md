@@ -101,21 +101,34 @@ python plot_animation.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt -o .mp4
 .mp4
 
 -------------------------------------------------------------------------------
-# 创建bin与基因的映射关系
+# 创建bin与基因的映射关系，并检验区室变化和基因表达之间的关系
 
 awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
 
 bedtools intersect -a chr1_100kb_bins_named.bed -b gencode.v19.annotation.gtf -wa -wb > chr1_100kb_bin_gene_map.txt
 
-python gene_and_compartment_analysis.py \
+python run_analysis.py \
     --bin-gene-map bin_gene_map.txt \
     --rna-seq rna_seq_de_results.csv \
-    --scores1 cscore1.txt \
-    --scores2 cscore2.txt \
+    --scores1 /path/to/your/GM_chr1_100kb__cscore.txt \
+    --scores2 /path/to/your/k562_chr1_100kb__cscore.txt \
     --name1 GM12878 \
     --name2 K562 \
     -t 0.1 \
     -o gm12878_vs_k562_compartment_expression.png
+
+# 检验基因绝对表达量的差异
+
+python gene_abs_expression.py \
+    --rsem-files /path/to/K562_rep1.tsv /path/to/K562_rep2.tsv \
+    --gtf gencode.v19.annotation.gtf \
+    --bin-gene-map bin_gene_map_50kb.txt \
+    --scores1 /path/to/GM_chr1_50kb__cscore.txt \
+    --scores2 /path/to/k562_chr1_50kb__cscore.txt \
+    --target-name K562 \
+    --skip-range 2430 2578 \
+    -t 0.1 \
+    -o k562_absolute_expression_levels_50kb_final.png
 
 --------------------------------------------------------------------------------
 ## 致谢 (Acknowledgments)
