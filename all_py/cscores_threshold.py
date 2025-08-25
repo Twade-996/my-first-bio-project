@@ -103,7 +103,7 @@ def main():
         plt.axvline(percentile_25, color='green', linestyle=':', label=f'25th Percentile ({percentile_25:.2f})')
         
         plt.title(f'C-Score Distribution for\n{args.cscore_file.split("/")[-1]}', fontsize=14)
-        plt.xlabel('C-Score (PC1 Value)', fontsize=12)
+        plt.xlabel('C-Score', fontsize=12)
         plt.ylabel('Number of Bins', fontsize=12)
         plt.legend()
         plt.grid(True, which='both', linestyle='--', linewidth=0.5)

@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-# MODIFIED: Import the required statistical test
 from scipy.stats import mannwhitneyu, wilcoxon
 
 from IO import ReadCompartmentScores
@@ -63,7 +62,7 @@ def main():
     
     args = parser.parse_args()
 
-    # --- Steps 1-4 remain the same ---
+    # ... [Steps 1-4 remain the same] ...
     bin_to_gene = parse_bin_gene_map(args.bin_gene_map)
     if not bin_to_gene: sys.exit("\nError: No genes found. Check chromosome naming ('chr1' vs '1').")
     
@@ -101,14 +100,13 @@ def main():
     results = {k: v for k, v in results.items() if v}
     order = [cat for cat in ['Stable B', 'A -> B', 'Other/Transition', 'Stable A', 'B -> A'] if cat in results]
 
-    # --- 步骤 5: 统计验证与可视化 (CORRECTED LOGIC) ---
+    # --- 步骤 5: 统计验证与可视化 (MODIFIED for clarity) ---
     print("Generating plot and statistics...")
     plot_data = [{'Category': cat, 'log2FoldChange': fc} for cat, fc_list in results.items() for fc in fc_list]
     if not plot_data: sys.exit("\nError: No gene expression data could be matched. Analysis cannot proceed.")
     plot_df = pd.DataFrame(plot_data)
 
     plt.figure(figsize=(12, 8))
-    order = ['Stable B', 'A -> B', 'Other/Transition', 'Stable A', 'B -> A']
     sns.boxplot(data=plot_df, x='Category', y='log2FoldChange', order=order,
                 palette={'Stable B':'lightblue', 'A -> B':'blue', 'Stable A':'lightcoral', 
                          'B -> A':'red', 'Other/Transition':'lightgray'})
@@ -118,7 +116,7 @@ def main():
     plt.ylabel(f'log2 Fold Change ({args.name2} / {args.name1})', fontsize=12)
     plt.xlabel('Compartment Category', fontsize=12)
     
-    # --- Corrected Statistical Analysis Part ---
+    # --- New Statistical Analysis Part with Test Names ---
     print("\n--- Statistical Test Results ---")
     
     # Left corner: Intra-group tests (vs 0)
@@ -132,22 +130,24 @@ def main():
                 intra_group_stats.append(f"{cat}: p={p_val:.2e}")
                 print(f"  {cat}: p-value = {p_val:.2e}")
 
-    stats_text_left = "Median log2FC vs 0:\n" + "\n".join(intra_group_stats)
+    # MODIFIED: Added test name to the text string
+    stats_text_left = "Wilcoxon signed-rank test (vs 0):\n" + "\n".join(intra_group_stats)
     plt.figtext(0.02, 0.01, stats_text_left, ha="left", fontsize=10, va="bottom")
 
     # Right corner: Inter-group tests (vs starting environment)
     inter_group_stats = []
     print("Inter-group Mann-Whitney U test (vs starting environment):")
-    if 'A -> B' in results and 'Stable A' in results: # Correct comparison
+    if 'A -> B' in results and 'Stable A' in results:
         _, p_val_ab = mannwhitneyu(results['A -> B'], results['Stable A'], alternative='two-sided')
         inter_group_stats.append(f"A->B vs Stable A: p={p_val_ab:.2e}")
         print(f"  A->B vs Stable A: p-value = {p_val_ab:.2e}")
-    if 'B -> A' in results and 'Stable B' in results: # Correct comparison
+    if 'B -> A' in results and 'Stable B' in results:
         _, p_val_ba = mannwhitneyu(results['B -> A'], results['Stable B'], alternative='two-sided')
         inter_group_stats.append(f"B->A vs Stable B: p={p_val_ba:.2e}")
         print(f"  B->A vs Stable B: p-value = {p_val_ba:.2e}")
 
-    stats_text_right = "Comparison vs Start State:\n" + "\n".join(inter_group_stats)
+    # MODIFIED: Added test name to the text string
+    stats_text_right = "Mann-Whitney U test (vs Start State):\n" + "\n".join(inter_group_stats)
     plt.figtext(0.98, 0.01, stats_text_right, ha="right", fontsize=10, va="bottom")
 
     plt.savefig(args.output, dpi=300, bbox_inches='tight')

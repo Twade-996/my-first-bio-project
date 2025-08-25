@@ -107,7 +107,7 @@ awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
 
 bedtools intersect -a chr1_100kb_bins_named.bed -b gencode.v19.annotation.gtf -wa -wb > chr1_100kb_bin_gene_map.txt
 
-python run_analysis.py \
+python gene_and_compartment_analysis.py \
     --bin-gene-map bin_gene_map.txt \
     --rna-seq rna_seq_de_results.csv \
     --scores1 /path/to/your/GM_chr1_100kb__cscore.txt \
@@ -147,6 +147,18 @@ python plot_showcase.py \
     --skip-range 2430 2578 \
     -t 0.1 \
     --highlight-type "B -> A"
+
+# 绘制带有区室变化的3D模型，并标出含基因表达变化量最大的前n个bin
+
+python all_py/plot_pic_gene.py \
+evr_structure.pdb cscore1.txt cscore2.txt \
+--bin-gene-map chr1_100kb_bin_gene_map.txt \
+-t 0.2 \
+--show-bins \
+--de-results rna_seq_de_results.csv \
+--top-genes 20 \
+--bin-size 5
+-o gene_top_20.png
 
 --------------------------------------------------------------------------------
 ## 致谢 (Acknowledgments)
