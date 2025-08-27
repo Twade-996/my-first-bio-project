@@ -5,30 +5,45 @@ From hic data to chromosome 3D dynamic models
 ----------------------------------------------------------------------------
 # 使用EVR计算bin坐标
 
-.hic
+sample_file.hic
 
-java -jar juicer_tools.jar dump observed KR GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb.KRnorm.txt
+java -jar juicer_tools.jar \
+dump observed KR \
+sample_file.hic \
+chr1 chr1 BP 100000 \
+sample_file.KRnorm.txt
 
-chr1_100kb.KRnorm.txt
+convert_3col_to_evr.py \
+sample_file.KRnorm.txt \
+sample_file_evr_matrix.txt
 
-convert_3col_to_evr.py chr1_100kb.KRnorm.txt chr1_100kb_evr_matrix.txt
+python evr.py \
+-i sample_file_evr_matrix.txt \
+-o sample_file_evr_structure.pdb \
+--se 6 \
+-t 6 \
+--seed 1 \
+--ChrType 1
 
-chr1_100kb_evr_matrix.txt
-
-python evr.py -i evr_matrix.txt -o evr_structure.pdb --se 6 -t 6 --seed 1 --ChrType 1
-
-Chr1_100kb_evr_structure.pdb
+sample_file_evr_structure.pdb
 
 ----------------------------------------------------------------------------
 # 使用CscoreTool划分区室
 
-.hic
+sample_file.hic
 
-java -Xmx16G -jar juicer_tools.jar dump observed NONE GSE63525_K562_combined_30.hic chr1 chr1 BP 100000 chr1_100kb_raw.txt
+java -Xmx16G -jar juicer_tools.jar \
+dump observed NONE \
+sample_file.hic \
+chr1 chr1 BP 100000 \
+sample_file_raw.txt
 
-python format_raw_hic.py chr1_100kb_raw.txt chr1_100kb.summary --chrom chr1 --binsize 100000 --output_bed chr1_100kb_bins.bed
-
-chr1_100kb.summary & chr1_100kb_bins.bed
+python format_raw_hic.py \
+sample_file_raw.txt \
+sample_file.summary \
+--chrom chr1 \
+--binsize 100000 \
+--output_bed sample_file_bins.bed
 
 CscoreTool1.1 < windows.bed> < input.summary> < outputPrefix> < session> < minDis> [chrName]
 
@@ -37,29 +52,49 @@ Cscore(txt/bedgraph/…)
 ----------------------------------------------------------------------------
 # 使用PCA验证区室划分
 
-.hic
+sample_file.hic
 
-hicConvertFormat --matrices GSE63525_GM12878_insitu_DpnII_combined_30.hic --outFileName GM12878_50kb.cool --inputFormat hic --outputFormat cool --resolutions 50000
+hicConvertFormat \
+--matrices sample_file.hic \
+--outFileName sample_file.cool \
+--inputFormat hic \
+--outputFormat cool \
+--resolutions 50000
 
-hicConvertFormat --matrices GM12878_50kb_50000.cool --outFileName GM12878_50kb.h5 --inputFormat cool --outputFormat h5 --chromosome 1 --resolutions 50000
+hicConvertFormat \
+--matrices sample_file.cool \
+--outFileName sample_file.h5 \
+--inputFormat cool \
+--outputFormat h5 \
+--chromosome 1 \
+--resolutions 50000
 
-hicPCA --matrix GM12878_50kb.h5 --outputFileName gm12878_chr1_50kb_pca.bedgraph --numberOfEigenvectors 1 --format bedgraph --chromosomes 1
+hicPCA \
+--matrix sample_file.h5 \
+--outputFileName sample_file.bedgraph \
+--numberOfEigenvectors 1 \
+--format bedgraph \
+--chromosomes 1
 
 ---------------------------------------------------------------------------
 # 判断A/B区室的cscore阈值
 
-cscore.txt
+sample_file_cscore.txt
 
-python cscores_threshold.py cscore.txt
+python cscores_threshold.py sample_file_cscore.txt
 
-suggested thresholds
+suggested_thresholds
 
 ---------------------------------------------------------------------------
 # 对比分析cscore,并汇总图像
 
-sample_1.bedgraph & sample_2.bedgraph
+sample_1_cscore.bedgraph & sample_2_cscore.bedgraph
 
-compare_cscores.py [-h] --outdir OUTDIR [--name1 NAME1] [--name2 NAME2] cscore1 cscore2
+compare_cscores.py \
+--outdir OUTDIR \
+[--name1 NAME1] \
+[--name2 NAME2] \
+sample_1_cscore.bedgraph sample_2_cscore.bedgraph
 
 boundary_drift.png
 compartment_switch_rate.png
@@ -80,85 +115,107 @@ python auto_plot_images.py /your/output/path
 ## 将IO.py放置到与绘图脚本同一目录中
 # 标注区室的染色体3D模型
 
-sample_1.pdb & .bedgraph
+sample_1.pdb & sample_1_cscore.txt
 
-python plot_with_compartment.py chr1_100kb_evr_structure.pdb -cf chr1_100kb__cscore.txt --show
+python plot_with_compartment.py \
+sample_1.pdb \
+-cf sample_1_cscore.txt \
+--show
 
 ----------------------------------------------------------------------------
 # 可交互、可平滑变化的一对3D染色体模型
 
-sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
+sample_1.pdb & sample_1_cscore.txt & sample_2.pdb & sample_2_cscore.txt
 
-python plot_interactive_morph.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt [...]
+python plot_interactive_morph.py \
+sample_1.pdb sample_1_cscore.txt \
+sample_2.pdb sample_2_cscore.txt \
+[...]
 
 ----------------------------------------------------------------------------
 # 平滑变化的一对3D染色体模型动画
 
-sample_1.pdb/cscore.txt & sample_2.pdb/cscore.txt
+sample_1.pdb & sample_1_cscore.txt & sample_2.pdb & sample_2_cscore.txt
 
-python plot_animation.py sample_1.pdb cscore.txt sample_2.pdb cscore.txt -o .mp4
+python plot_animation.py \
+sample_1.pdb sample_1_cscore.txt \
+sample_2.pdb sample_2_cscore.txt \
+-o .mp4 \
+[...]
 
 .mp4
 
 -------------------------------------------------------------------------------
 # 创建bin与基因的映射关系，并检验区室变化和基因表达之间的关系
 
-awk '{print $0 "\tbin_" FNR}' chr1_100kb_bins.bed > chr1_100kb_bins_named.bed
+awk '{print $0 "\tbin_" FNR}' sample_file_bins.bed > sample_file_bins_named.bed
 
-bedtools intersect -a chr1_100kb_bins_named.bed -b gencode.v19.annotation.gtf -wa -wb > chr1_100kb_bin_gene_map.txt
+bedtools intersect \
+-a sample_file_bins_named.bed \
+-b sample_gencode_annotation.gtf \
+-wa -wb > sample_file_bin_gene_map.txt
 
 python gene_and_compartment_analysis.py \
-    --bin-gene-map bin_gene_map.txt \
-    --rna-seq rna_seq_de_results.csv \
-    --scores1 /path/to/your/GM_chr1_100kb__cscore.txt \
-    --scores2 /path/to/your/k562_chr1_100kb__cscore.txt \
-    --name1 GM12878 \
-    --name2 K562 \
-    -t 0.1 \
-    -o gm12878_vs_k562_compartment_expression.png
+    --bin-gene-map sample_bin_gene_map.txt \
+    --rna-seq sample_rna_seq_de_results.csv \
+    --scores1 sample_file_cscore.txt \
+    --scores2 sample_file_cscore.txt \
+    --name1 NAME1 \
+    --name2 NAME2 \
+    -t cscore_threshold \
+    -o compartment_expression.png
 
 # 检验基因绝对表达量的差异
 
 python gene_abs_expression.py \
-    --rsem-files /path/to/K562_rep1.tsv /path/to/K562_rep2.tsv \
-    --gtf gencode.v19.annotation.gtf \
-    --bin-gene-map bin_gene_map_50kb.txt \
-    --scores1 /path/to/GM_chr1_50kb__cscore.txt \
-    --scores2 /path/to/k562_chr1_50kb__cscore.txt \
-    --target-name K562 \
-    --skip-range 2430 2578 \
-    -t 0.1 \
-    -o k562_absolute_expression_levels_50kb_final.png
+    --rsem-files sample_rep1.tsv sample_rep2.tsv \
+    --gtf sample_gencode_annotation.gtf \
+    --bin-gene-map sample_bin_gene_map_50kb.txt \
+    --scores1 sample_1_cscore.txt \
+    --scores2 sample_2_cscore.txt \
+    --target-name NAME \
+    --skip-range start end \
+    -t cscore_threshold \
+    -o sample_absolute_expression_levels_final.png
 
 --------------------------------------------------------------------------------
 # 构建区室B->A且含基因的模型
 
 # 标注所有区室变化的bin，点击可输出高亮bin中所含基因及log2FC、TPM
-python new_plot.py evr_structure.pdb cscore.txt evr_structure.pdb cscore.txt --gtf gencode.v19.annotation.gtf --bin-gene-map chr1_100kb_bin_gene_map.txt --rna-seq rna_seq_de_results.csv --rsem-files k562_rep1.tsv k562_rep2.tsv -t 0.2 --highlight-switches
+python new_plot.py \
+sample1_evr_structure.pdb sample1_cscore.txt \
+sample2_evr_structure.pdb sample2_cscore.txt \
+--gtf sample_gencode_annotation.gtf \
+--bin-gene-map sample_bin_gene_map.txt \
+--rna-seq sample_rna_seq_de_results.csv \
+--rsem-files sample_rep1.tsv sample_rep2.tsv \
+-t cscore_threshold \
+--highlight-switches
 
 # 标注B->A且含有基因的bin
 python plot_showcase.py \
-    cscore.txt \
-    cscore.txt \
-    --name1 GM12878 --name2 K562 \
-    --gtf gencode.v19.annotation.gtf \
-    --bin-gene-map bin_gene_map_50kb.txt \
-    --rna-seq rna_seq_de_results.csv \
-    --skip-range 2430 2578 \
-    -t 0.1 \
+    sample1_cscore.txt \
+    sample2_cscore.txt \
+    --name1 NAME1 --name2 NAME2 \
+    --gtf sample_gencode_annotation.gtf \
+    --bin-gene-map sample_bin_gene_map_50kb.txt \
+    --rna-seq sample_rna_seq_de_results.csv \
+    --skip-range start end \
+    -t cscore_threshold \
     --highlight-type "B -> A"
 
 # 绘制带有区室变化的3D模型，并标出含基因表达变化量最大的前n个bin
 
 python all_py/plot_pic_gene.py \
-evr_structure.pdb cscore1.txt cscore2.txt \
---bin-gene-map chr1_100kb_bin_gene_map.txt \
--t 0.2 \
+sample_evr_structure.pdb \
+sample1_cscore.txt sample2_cscore.txt \
+--bin-gene-map sample_bin_gene_map.txt \
+-t cscore_threshold \
 --show-bins \
---de-results rna_seq_de_results.csv \
---top-genes 20 \
---bin-size 5
--o gene_top_20.png
+--de-results sample_rna_seq_de_results.csv \
+--top-genes n \
+[--bin-size 15]
+-o gene_top_n.png
 
 --------------------------------------------------------------------------------
 ## 致谢 (Acknowledgments)
