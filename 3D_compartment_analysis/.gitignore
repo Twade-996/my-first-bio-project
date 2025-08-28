@@ -27,14 +27,6 @@ env/
 *.txt
 *.png
 *.mp4
-*.log
-*.tmp
-*.bak
-*.summary
-*.dump
-*.h5
-*.bedgraph
-*.bigwig
 
 # An exception for the README
 !README.md

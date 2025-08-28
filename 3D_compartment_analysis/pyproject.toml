@@ -1,0 +1,63 @@
+# ===================================================================
+# 1. 项目构建系统定义 (必需)
+# ===================================================================
+# 这部分告诉pip使用哪个工具来构建你的包。setuptools是标准选择。
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+# ===================================================================
+# 2. 项目核心元数据 (必需)
+# ===================================================================
+# 这是关于你项目的基础信息，会显示在PyPI等包索引上。
+[project]
+name = "evr_3d_suite"
+version = "0.1.0"
+authors = [
+  { name="Your Name", email="your.email@example.com" },
+]
+description = "A comprehensive suite for 3D chromosome structure analysis, visualization, and multi-omics integration."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+# 核心依赖项: 列出你的包正常运行所必需的所有其他Python库
+dependencies = [
+    "numpy",
+    "pandas",
+    "seaborn",
+    "matplotlib",
+]
+
+# ===================================================================
+# 3. 命令行脚本入口点 (关键功能)
+# ===================================================================
+# 这部分将你的Python函数链接到终端命令。
+[project.scripts]
+# --- 来自 cscore.py ---
+evr-cscore-threshold = "evr_3d_suite.cscore:main_threshold"
+evr-cscore-compare = "evr_3d_suite.cscore:main_compare"
+evr-cscore-plot = "evr_3d_suite.cscore:main_plot_profile"
+
+# --- 来自 analysis.py ---
+evr-analyze-change = "evr_3d_suite.analysis:main_analyze_expression_change"
+evr-analyze-absolute = "evr_3d_suite.analysis:main_analyze_absolute_expression"
+
+# --- 来自 plot3d.py ---
+evr-plot3d-static = "evr_3d_suite.plot3d:main_static"
+evr-plot3d-interactive = "evr_3d_suite.plot3d:main_interactive"
+# evr-plot3d-animation = "evr_3d_suite.plot3d:main_animation" # 如果你完成了这个函数，就取消注释
+# evr-plot3d-publication = "evr_3d_suite.plot3d:main_publication_plot" # 如果你完成了这个函数，就取消注释
+
+# ===================================================================
+# 4. 包发现配置 (可选但推荐)
+# ===================================================================
+# 这部分告诉setuptools去哪里找你的Python源代码。
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["evr_3d_suite"]
