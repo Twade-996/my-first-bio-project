@@ -35,6 +35,7 @@ env/
 *.h5
 *.bedgraph
 *.bigwig
+*.gz
 
 # An exception for the README
 !README.md
