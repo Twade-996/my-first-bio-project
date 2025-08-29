@@ -51,8 +51,12 @@ evr-analyze-absolute = "evr_3d_suite.analysis:main_analyze_absolute_expression"
 # --- 来自 plot3d.py ---
 evr-plot3d-static = "evr_3d_suite.plot3d:main_static"
 evr-plot3d-interactive = "evr_3d_suite.plot3d:main_interactive"
-# evr-plot3d-animation = "evr_3d_suite.plot3d:main_animation" # 如果你完成了这个函数，就取消注释
-# evr-plot3d-publication = "evr_3d_suite.plot3d:main_publication_plot" # 如果你完成了这个函数，就取消注释
+evr-plot3d-animation = "evr_3d_suite.plot3d:main_animation"
+evr-plot3d-publication = "evr_3d_suite.plot3d:main_publication_plot"
+
+# --- 来自 preprocessing.py ---
+evr-juicer-to-evr = "evr_3d_suite.preprocessing:main_juicer_to_evr"
+evr-juicer-to-cscore = "evr_3d_suite.preprocessing:main_juicer_to_cscore"
 
 # ===================================================================
 # 4. 包发现配置 (可选但推荐)

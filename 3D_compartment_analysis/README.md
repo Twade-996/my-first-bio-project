@@ -53,6 +53,25 @@ It is highly recommended to install the package in a dedicated Conda environment
 
 This section outlines a typical analysis workflow using the tools provided in this package.
 
+### Step 0: Preprocessing Juicer Output
+
+The first step is to convert the raw text output from `juicer_tools dump` into formats compatible with downstream tools.
+
+**A. For EVR 3D modeling:**
+Convert the 3-column KR-normalized matrix into a dense matrix required by EVR.
+```bash
+evr-juicer-to-evr path/to/juicer_kr.txt path/to/evr_matrix.txt
+```
+
+**B. For CscoreTool analysis:**
+Convert the 3-column raw interaction matrix into the 7-column summary format required by CscoreTool. This command also generates a corresponding BED file defining the genomic coordinates for each bin, which is essential for downstream analysis.
+```bash
+evr-juicer-to-cscore path/to/juicer_raw.txt path/to/cscore_input.summary \
+    --chrom chr1 \
+    --binsize 100000 \
+    --output-bed path/to/chr1_100kb_bins.bed
+```
+
 ### Prerequisites: Getting 3D Structures and Scores
 
 The `evr_3d_suite` package focuses on the analysis and visualization *after* you have generated the initial 3D structures and compartment scores. You can generate these input files using standard tools:
