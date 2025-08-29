@@ -41,7 +41,7 @@ It is highly recommended to install the package in a dedicated Conda environment
 3.  **Clone and install the package:**
     Clone this repository and install the `evr_3d_suite` package in editable mode. This allows you to modify the source code and have the changes immediately available.
     ```bash
-    git clone https://your-repo-url/3D_compartment_analysis.git
+    git clone https://github.com/Twade-996/my-first-bio-project.git
     cd 3D_compartment_analysis
     pip install -e .
     ```
