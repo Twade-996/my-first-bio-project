@@ -44,19 +44,22 @@ evr-cscore-threshold = "evr_3d_suite.cscore:main_threshold"
 evr-cscore-compare = "evr_3d_suite.cscore:main_compare"
 evr-cscore-plot = "evr_3d_suite.cscore:main_plot_profile"
 
+# RNA-seq分析工具
 # --- 来自 analysis.py ---
 evr-analyze-change = "evr_3d_suite.analysis:main_analyze_expression_change"
 evr-analyze-absolute = "evr_3d_suite.analysis:main_analyze_absolute_expression"
 
+# 绘图工具
 # --- 来自 plot3d.py ---
 evr-plot3d-static = "evr_3d_suite.plot3d:main_static"
 evr-plot3d-interactive = "evr_3d_suite.plot3d:main_interactive"
 evr-plot3d-animation = "evr_3d_suite.plot3d:main_animation"
 evr-plot3d-publication = "evr_3d_suite.plot3d:main_publication_plot"
 
+# 数据预处理工具 
 # --- 来自 preprocessing.py ---
-evr-juicer-to-evr = "evr_3d_suite.preprocessing:main_juicer_to_evr"
-evr-juicer-to-cscore = "evr_3d_suite.preprocessing:main_juicer_to_cscore"
+evr-hic2evr = "evr_3d_suite.preprocessing:main_hic_to_evr"
+evr-hic2cscore = "evr_3d_suite.preprocessing:main_hic_to_cscore"
 
 # ===================================================================
 # 4. 包发现配置 (可选但推荐)
