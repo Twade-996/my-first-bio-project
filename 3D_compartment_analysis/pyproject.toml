@@ -39,12 +39,13 @@ dependencies = [
 # ===================================================================
 # 这部分将你的Python函数链接到终端命令。
 [project.scripts]
+# 区室分析
 # --- 来自 cscore.py ---
 evr-cscore-threshold = "evr_3d_suite.cscore:main_threshold"
 evr-cscore-compare = "evr_3d_suite.cscore:main_compare"
 evr-cscore-plot = "evr_3d_suite.cscore:main_plot_profile"
 
-# RNA-seq分析工具
+# 多组学整合
 # --- 来自 analysis.py ---
 evr-analyze-change = "evr_3d_suite.analysis:main_analyze_expression_change"
 evr-analyze-absolute = "evr_3d_suite.analysis:main_analyze_absolute_expression"
